@@ -1,0 +1,7 @@
+streamlit
+pandas
+google-auth-oauthlib
+google-cloud-firestore
+pyDecision
+numpy
+plotly
