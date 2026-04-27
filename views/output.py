@@ -127,17 +127,3 @@ def render_output_page():
     render_data_charts(df_sorted)
 
     st.button("Back", type='secondary', width="stretch", on_click=back)
-    
-    # criterias = list(loadFireStore('criteria').to_dict().keys())
-    # selected = st.multiselect(
-    #     "Pilih Laptop untuk Dibandingkan", df['nama'].tolist(),
-    #     default=df['nama'].iloc[0:2].tolist()
-    # )
-    # create_radar_chart(df_sorted, selected, criterias)
-    
-
-## Highlight Rekomendasi; st.success/metric
-###---->e.g.Rekomendasi Terbaik: Berdasarkan preferensi Anda, Alternatif X adalah pilihan paling optimal dengan skor akhir 0.895.
-## Tabel Papan Peringkat (peringkat, nama alt, skor)
-## Visualisasi Data (Bar chart, Radar chart)
-## Transparansi Keputusan (rincian detail perhitungan; st.expander)
