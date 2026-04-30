@@ -1,14 +1,34 @@
-import streamlit as st
 import pandas as pd
-from views.input import render_input_page
-from views.output import render_output_page
+from views.ui import *
+import streamlit as st
+from utils.data_loader import *
+from models.model import process
 
 if "isInput" not in st.session_state:
     st.session_state.isInput = True
 
+if "isLanding" not in st.session_state:
+    st.session_state.isLanding = True
+
 st.set_page_config(page_title="Proyek Akhir SPK", page_icon="📊", layout="wide")
 
-if st.session_state.isInput:
-    render_input_page()
-else:
-    render_output_page()
+###FIRESTORE
+st.session_state.db = load_firestore()
+st.session_state.criteria = get_documents(st.session_state.db, "criteria")
+st.session_state.category = get_documents(st.session_state.db, "category")
+st.session_state.product = normalize_product(get_documents(st.session_state.db, "product"))
+
+storage = load_appwrite()
+landing_image = get_file_url(storage, "asset", "landing_page")
+
+render_sidebar(
+    categories=st.session_state.category
+)
+render_main_screen(
+    landing_image=landing_image, 
+    product=st.session_state.product, 
+    isLanding=st.session_state.isLanding,
+    category=st.session_state.category,
+    criteria=st.session_state.criteria
+)
+
