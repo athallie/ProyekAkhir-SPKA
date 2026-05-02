@@ -126,7 +126,12 @@ def render_details_decision(laptops, df, weights, criterion_type):
 
     # Show matrix
     with st.expander("Matriks Perhitungan"):
-        st.dataframe(weighted_df.sort_values(by='Skor', ascending=False),hide_index=True)
+        st.dataframe(
+            weighted_df.sort_values(by='Skor', ascending=False)[[
+                'Laptop', 'Skor', 'Harga', 'Prosesor', 'RAM', 'SSD', 'Baterai', 'Portabilitas', 'Resolusi', 'Akurasi Warna'
+            ]],
+            hide_index=True
+        )
 
 # def render_radar_chart(df, criterias):
 #     selected_laptops = st.multiselect(
