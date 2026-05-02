@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 def render_table_ranking(results):
     results['score'] = results['score'] * 100
-    results = results[['rank', 'name', 'score', 'nama_prosesor', 'ram', 'ssd', 'baterai', 'portabilitas']]
+    results = results[['rank', 'score', 'name', 'harga', 'nama_prosesor', 'ram', 'ssd', 'baterai', 'portabilitas']]
 
     # results = results.style.apply(highlight_top_3, axis=1)
 
@@ -23,6 +23,10 @@ def render_table_ranking(results):
             'score': st.column_config.NumberColumn(
                 "Skor",
                 format="%.2f"
+            ),
+            'harga': st.column_config.NumberColumn(
+                "Harga",
+                format="Rp%,f"
             ),
             'nama_prosesor': "Prosesor",
             'ram': st.column_config.NumberColumn(
@@ -84,18 +88,21 @@ def render_details_decision(laptops, df, weights, criterion_type):
             
     # 2. Pembobotan
     weighted_df = norm_df * weights
-    weighted_df['Total Score'] = weighted_df.sum(axis=1)
-    weighted_df_with_laptop = weighted_df.copy()
-    weighted_df_with_laptop.index = laptops
-    weighted_df = weighted_df.sort_values(by='Total Score', ascending=True)
+    weighted_df['skor'] = weighted_df.sum(axis=1)
+
+    weighted_df["laptop"] = laptops
+    weighted_df = weighted_df.sort_values(by='skor', ascending=True)
     
     # 3. Visualisasi
     fig = go.Figure()
 
+    weighted_df.columns = ['Akurasi Warna', 'Baterai', 'Harga', 'Portabilitas', 'Prosesor', 'RAM', 'Resolusi', 'SSD', 'Skor', 'Laptop']
+    df.columns = ['Akurasi Warna', 'Baterai', 'Harga', 'Portabilitas', 'Prosesor', 'RAM', 'Resolusi', 'SSD']
+
     # Tracing setiap kriteria
     for col in df.columns:
         fig.add_trace(go.Bar(
-            y=weighted_df.index,
+            y=weighted_df["Laptop"],
             x=weighted_df[col],
             name=col,
             orientation='h',
@@ -106,7 +113,7 @@ def render_details_decision(laptops, df, weights, criterion_type):
     fig.update_layout(
         barmode='stack',
         title="Rincian Skor SAW (Weighted Contribution)",
-        xaxis_title="Final Preference Score (Vᵢ)",
+        xaxis_title="Skor Akhir Preferensi (Vᵢ)",
         yaxis_title="Alternatif",
         legend_title="Kriteria",
         height=500,
@@ -117,10 +124,9 @@ def render_details_decision(laptops, df, weights, criterion_type):
     with st.expander("Rincian Skor SAW"):
         st.plotly_chart(fig, use_container_width=True)
 
-    # Show the calculated scores in a table
+    # Show matrix
     with st.expander("Matriks Perhitungan"):
-        weighted_df.index = laptops
-        st.dataframe(weighted_df_with_laptop.sort_values(by='Total Score', ascending=False))
+        st.dataframe(weighted_df.sort_values(by='Skor', ascending=False),hide_index=True)
 
 # def render_radar_chart(df, criterias):
 #     selected_laptops = st.multiselect(
