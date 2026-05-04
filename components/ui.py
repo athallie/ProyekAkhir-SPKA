@@ -4,6 +4,7 @@ from utils.helper import *
 from components.output import *
 from models.model import process
 import time
+from utils.ai import *
 
 if "selected_category" not in st.session_state:
     st.session_state.selected_category = "Custom"
@@ -11,10 +12,22 @@ if "selected_category" not in st.session_state:
 if "isLanding" not in st.session_state:
     st.session_state.isLanding = True
 
+gemini_client = setup_gemini_client()
+
 def render_results(image_url, profile, results):
     st.title("Top 3 Recommendations")
     st.caption(f"Berdasarkan profil **{profile}** dengan perhitungan Simple Additive Weighting (SAW)")
     render_card(image_url, results.head(3).to_dict(orient="records"))
+
+    ###GEMINI
+    with st.expander("✨ Gemini AI Market Insight", expanded=True):
+        with st.container(height=400): 
+            with st.spinner("Gemini sedang riset harga di Internet..."):
+                st.write_stream(get_gemini_market_insight(gemini_client, results.head(3), st.session_state.selected_category))
+            
+    st.caption("Disclaimer: Output AI bersifat probabilistik dan mungkin mengandung kesalahan, halusinasi, atau informasi yang sudah usang. Harap verifikasi kembali harga dan spesifikasi secara mandiri.")
+
+    st.markdown("---")
 
     st.subheader("Papan Peringkat")
     render_table_ranking(results)
