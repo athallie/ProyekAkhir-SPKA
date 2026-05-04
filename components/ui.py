@@ -32,7 +32,7 @@ def get_output_table(df, results):
 
     return df_sorted
 
-def render_main_screen(landing_image, product, category, criteria, criteria_mapping):
+def render_main_screen(landing_image, product, category, criteria, criteria_mapping, unique_criteria_values):
     if st.session_state.isLanding == True:
         col1, col2, col3 = st.columns([1,3,1])
         with col2:
@@ -54,11 +54,30 @@ def render_main_screen(landing_image, product, category, criteria, criteria_mapp
         filtered_product_mapped = map_criteria(filtered_product, criteria_mapping)
         criteria_weights_types = get_criteria_weights_types(criteria)
 
+        criteria_class = classify_criteria_class(
+            criteria_mapping=criteria,
+            criteria_values={
+                "harga": st.session_state.harga,
+                "prosesor": st.session_state.prosesor,
+                "ram": st.session_state.ram,
+                "ssd": st.session_state.ssd,
+                "baterai": st.session_state.baterai,
+                "portabilitas": st.session_state.portabilitas,
+                "akurasi_warna": st.session_state.akurasi_warna,
+                "resolusi": st.session_state.resolusi
+            },
+            criteria_unique_values = unique_criteria_values
+        )
+
+        # st.write(criteria_class)
+        # st.write(criteria_weights_types['weights'])
+
         adjusted_weights = adjust_weights(
             dict(zip(criteria_weights_types["criterias"], criteria_weights_types["weights"])),
-            st.session_state.selected_category,
-            category
+            criteria_class=criteria_class
         )
+
+        # st.write(adjusted_weights)
 
         if not filtered_product_mapped.empty:
             saw_results = process(
@@ -138,7 +157,7 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             format="localized",
             key="harga",
             value=(min_values["harga"], max_values["harga"]),
-            disabled=disabled
+            # disabled=disabled
         )
         skor_prosesor = st.slider(
             "Prosesor (Geekbench Score)", 
@@ -148,7 +167,7 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             format="localized",
             key="prosesor",
             value=(min_values["prosesor"], max_values["prosesor"]),
-            disabled=disabled
+            # disabled=disabled
         )
         ram = st.pills(
             "RAM (GB)", 
@@ -156,16 +175,18 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             default=list(criteria_values["ram"]),
             selection_mode="multi", 
             key="ram",
-            disabled=disabled
+            # disabled=disabled
         )
+
         ssd = st.pills(
             "SSD (GB)", 
             options=list(criteria_values["ssd"]), 
             default=list(criteria_values["ssd"]),
             selection_mode="multi", 
             key="ssd",
-            disabled=disabled
+            # disabled=disabled
         )
+
         baterai = st.slider(
             "Baterai", 
             min_value=min_values["baterai"], 
@@ -174,7 +195,7 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             format="%d jam",
             key="baterai",
             value=(min_values["baterai"], max_values["baterai"]),
-            disabled=disabled,
+            # disabled=disabled,
         )
 
         portabilitas = st.slider(
@@ -185,29 +206,30 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             format="%d KG",
             key="portabilitas",
             value=(min_values["portabilitas"], max_values["portabilitas"]),
-            disabled=disabled,
+            # disabled=disabled,
         )
 
         akurasi_warna = st.multiselect(
             label="Panel", 
             options=criteria_values["akurasi_warna"],
             default=criteria_values["akurasi_warna"],
-            disabled=disabled,
-            key="akurasi_warna"
+            # disabled=disabled,
+            key="akurasi_warna",
+            accept_new_options=True
         )
         resolusi = st.multiselect(
             label="Resolusi", 
             options=criteria_values["resolusi"],
             default=criteria_values["resolusi"],
-            disabled=disabled,
-            key="resolusi"
+            # disabled=disabled,
+            key="resolusi",
+            accept_new_options=True
         )
 
 def get_criteria_preset(categories, criteria, max_values, criteria_values):
 
     category_mapping = categories[st.session_state.selected_category]["filter"]
     criteria_filter = {}
-
 
     for key, value in category_mapping.items():
         for key1, value1 in criteria[key]["levels"].items():

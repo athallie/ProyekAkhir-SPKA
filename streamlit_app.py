@@ -40,5 +40,6 @@ render_main_screen(
     product=st.session_state.product, 
     category=st.session_state.category,
     criteria=st.session_state.criteria,
-    criteria_mapping=st.session_state.criteria_mapping
+    criteria_mapping=st.session_state.criteria_mapping,
+    unique_criteria_values=criteria_values
 )
