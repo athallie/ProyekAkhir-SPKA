@@ -34,12 +34,14 @@ def get_output_table(df, results):
 
 def render_main_screen(landing_image, product, category, criteria, criteria_mapping):
     if st.session_state.isLanding == True:
-        st.image(landing_image)
+        col1, col2, col3 = st.columns([1,3,1])
+        with col2:
+            st.image(landing_image)
 
-        st.title("Selamata Datang di Sistem Rekomendasi Laptop", text_alignment="center")
+        st.markdown("### Selamat Datang di Sistem Rekomendasi Laptop", text_alignment="center")
         st.markdown(
-            """
-            Lakukan penyesuaian pada kriteria laptop di sidebar untuk mulai mencari rekomendasi. 
+            f"""
+            Lakukan penyesuaian pada kriteria laptop di sidebar untuk mulai mencari rekomendasi.
             Sistem ini akan menganalisis kriteria-kriteria Anda untuk memberikan rekomendasi yang sesuai.
             """,
             text_alignment="center"
