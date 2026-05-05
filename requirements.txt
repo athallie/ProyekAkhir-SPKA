@@ -6,4 +6,4 @@ pyDecision
 numpy
 plotly
 appwrite
-genai
+google-genai
