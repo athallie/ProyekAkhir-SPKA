@@ -208,3 +208,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/
+
+#data
+.data/
+
+#notes
+.notes/

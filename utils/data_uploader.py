@@ -42,4 +42,4 @@ def upload_csv_to_firestore(csv_file_path, collection_name):
     print(f"Final total: {count} records uploaded.")
 
 # Usage
-upload_csv_to_firestore("data/data.csv", "product")
+upload_csv_to_firestore("data/data_v2.csv", "product")

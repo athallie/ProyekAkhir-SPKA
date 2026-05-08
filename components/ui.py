@@ -133,8 +133,8 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
         # }
 
         min_values = {
-            "harga": 0,
-            "prosesor":0,
+            "harga": 0.0,
+            "prosesor":0.0,
             "baterai":0.0,
             "ssd":0,
             "ram":0,
@@ -142,9 +142,9 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
         }
 
         max_values = {
-            "harga": max(criteria_values["harga"]),
-            "prosesor":max(criteria_values["prosesor"]),
-            "baterai":max(criteria_values["baterai"]),
+            "harga": float(max(criteria_values["harga"])),
+            "prosesor":float(max(criteria_values["prosesor"])),
+            "baterai":float(max(criteria_values["baterai"])),
             "ssd":max(criteria_values["ssd"]),
             "ram":max(criteria_values["ram"]),
             "portabilitas":max(criteria_values["portabilitas"]),
@@ -166,7 +166,7 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             "Harga (Rp)", 
             min_value=min_values["harga"], 
             max_value=max_values["harga"], 
-            step=1000, 
+            step=1000.0, 
             format="localized",
             key="harga",
             value=(min_values["harga"], max_values["harga"]),
@@ -176,7 +176,7 @@ def render_sidebar(categories=["No Categories Found"], criteria={}, criteria_val
             "Prosesor (Geekbench Score)", 
             min_value=min_values["prosesor"],
             max_value=max_values["prosesor"],
-            step=1000, 
+            step=1000.0, 
             format="localized",
             key="prosesor",
             value=(min_values["prosesor"], max_values["prosesor"]),
